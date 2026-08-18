@@ -1,0 +1,33 @@
+# --- LangChain + Groq ---
+langchain==0.3.7
+langchain-community==0.3.7
+langchain-groq==0.2.1
+langchain-chroma==0.1.4
+pytest==8.3.3
+
+# --- API ---
+fastapi==0.115.5
+uvicorn==0.32.1
+python-multipart>=0.0.9
+pydantic-settings==2.6.1
+
+# --- storage ---
+sqlalchemy>=2.0.0,<2.0.36
+chromadb==0.5.20
+
+# --- ingestion ---
+pymupdf==1.24.14
+pdfplumber==0.11.4
+pytesseract==0.3.13
+pillow==11.0.0
+
+# --- retrieval ---
+sentence-transformers==3.3.1
+rank-bm25==0.2.2
+tiktoken==0.8.0
+
+python-dotenv==1.0.1
+
+# --- auth ---
+bcrypt==4.2.1
+pyjwt==2.10.1

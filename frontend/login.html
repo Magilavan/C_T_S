@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="DrugBot — Sign in or create an account." />
+  <title>DrugBot — Sign In</title>
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="auth-bg">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <main class="auth-container" role="main">
+    <div class="auth-card" id="auth-card">
+      <div class="auth-brand">
+        <div class="auth-logo">💊</div>
+        <h1 class="auth-title">DrugBot</h1>
+        <p class="auth-subtitle">AI-powered drug information assistant</p>
+      </div>
+
+      <div class="auth-tabs" role="tablist">
+        <button id="tab-login" class="auth-tab active" role="tab" aria-selected="true">Sign In</button>
+        <button id="tab-signup" class="auth-tab" role="tab" aria-selected="false">Create Account</button>
+        <div class="tab-indicator" id="tab-indicator"></div>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div id="panel-login" class="auth-panel active" role="tabpanel">
+        <form id="login-form" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="login-email" class="form-label">Email address</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input id="login-email" type="email" class="form-input" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="login-password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="login-password" type="password" class="form-input" placeholder="Enter your password" required />
+              <button type="button" class="toggle-password" id="toggle-login-pw" aria-label="Toggle password visibility">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div id="login-alert" class="auth-alert hidden" role="alert"></div>
+          <button type="submit" id="btn-login" class="auth-btn">
+            <span class="btn-text">Sign In</span>
+            <div class="btn-spinner hidden"><div class="spinner"></div></div>
+          </button>
+        </form>
+      </div>
+
+      <!-- SIGNUP PANEL -->
+      <div id="panel-signup" class="auth-panel" role="tabpanel">
+        <form id="signup-form" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="signup-email" class="form-label">Email address</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input id="signup-email" type="email" class="form-input" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="signup-password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="signup-password" type="password" class="form-input" placeholder="Min 8 chars, upper+lower+digit+symbol" required />
+              <button type="button" class="toggle-password" id="toggle-signup-pw" aria-label="Toggle password visibility">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="password-strength" id="password-strength">
+              <div class="strength-bars">
+                <div class="strength-bar" id="str-bar-1"></div>
+                <div class="strength-bar" id="str-bar-2"></div>
+                <div class="strength-bar" id="str-bar-3"></div>
+                <div class="strength-bar" id="str-bar-4"></div>
+              </div>
+              <span class="strength-label" id="strength-label"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="signup-confirm" class="form-label">Confirm Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+              <input id="signup-confirm" type="password" class="form-input" placeholder="Re-enter your password" required />
+            </div>
+          </div>
+          <div class="password-rules" id="password-rules">
+            <div class="rule" id="rule-length"><span class="rule-icon">○</span> At least 8 characters</div>
+            <div class="rule" id="rule-upper"><span class="rule-icon">○</span> One uppercase letter</div>
+            <div class="rule" id="rule-lower"><span class="rule-icon">○</span> One lowercase letter</div>
+            <div class="rule" id="rule-digit"><span class="rule-icon">○</span> One digit</div>
+            <div class="rule" id="rule-special"><span class="rule-icon">○</span> One special character</div>
+          </div>
+          <div id="signup-alert" class="auth-alert hidden" role="alert"></div>
+          <button type="submit" id="btn-signup" class="auth-btn">
+            <span class="btn-text">Create Account</span>
+            <div class="btn-spinner hidden"><div class="spinner"></div></div>
+          </button>
+        </form>
+      </div>
+
+      <div class="auth-footer">
+        <div class="security-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+          <span>Passwords hashed with bcrypt · Emails SHA-256 indexed</span>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Drug Information Chatbot — AI-powered drug information assistant using RAG and verified prescribing data." />
+  <title>DrugBot — Drug Information Assistant</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>" />
+</head>
+<body>
+  <!-- ═══════════════════════════════════════════ SIDEBAR ═══════════════════════════════════════════ -->
+  <aside id="sidebar" class="sidebar" aria-label="Chat navigation">
+    <!-- Sidebar Header -->
+    <header class="sidebar-header">
+      <button id="btn-new-chat" class="icon-btn" title="New chat" aria-label="New chat">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+        </svg>
+      </button>
+      <span class="sidebar-title">DrugBot</span>
+      <button id="btn-toggle-sidebar" class="icon-btn" title="Close sidebar" aria-label="Toggle sidebar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Chat History -->
+    <nav id="chat-history" class="chat-history" aria-label="Chat sessions">
+      <!-- Populated by JS -->
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <footer class="sidebar-footer">
+      <div class="hairline-divider"></div>
+
+      <!-- Upload Section -->
+      <div class="sidebar-section">
+        <button id="btn-upload" class="sidebar-item" aria-label="Upload drug PDF">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span>Upload Drug PDF</span>
+        </button>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="helper-text">
+          Upload a prescribing information PDF to enable drug-specific Q&A with verified citations.
+        </p>
+      </div>
+
+      <!-- Ingested Documents List -->
+      <div class="sidebar-section">
+        <div class="ingested-drugs" id="ingested-drugs-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Theme Switcher -->
+      <div class="sidebar-section theme-section">
+        <div class="theme-section-header">
+          <span class="theme-section-title">Appearance</span>
+        </div>
+        <div class="theme-toggle-group" role="radiogroup" aria-label="Theme mode selection">
+          <button id="theme-btn-light" class="theme-btn" type="button" role="radio" aria-checked="false" title="Light theme" aria-label="Light theme">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <span>Light</span>
+          </button>
+          <button id="theme-btn-dark" class="theme-btn" type="button" role="radio" aria-checked="false" title="Dark theme" aria-label="Dark theme">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <span>Dark</span>
+          </button>
+          <button id="theme-btn-system" class="theme-btn active" type="button" role="radio" aria-checked="true" title="Auto theme matching system preference" aria-label="Auto theme matching system preference">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            <span>System</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div class="sidebar-section">
+        <button id="btn-logout" class="sidebar-item" aria-label="Sign out" style="color: var(--color-hollow);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </footer>
+  </aside>
+
+  <!-- Sidebar collapsed toggle (visible when sidebar is hidden) -->
+  <button id="btn-open-sidebar" class="icon-btn sidebar-open-btn hidden" title="Open sidebar" aria-label="Open sidebar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/>
+    </svg>
+  </button>
+
+  <!-- ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ -->
+  <main id="main-area" class="main-area">
+    <!-- Welcome state -->
+    <div id="welcome-screen" class="welcome-screen">
+      <div class="welcome-content">
+        <div class="domain-scope-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <span>Pharmaceutical & Clinical Medical Assistant</span>
+        </div>
+        <h1 class="welcome-heading">Drug Information Assistant</h1>
+        <p class="welcome-body">
+          Specialized in medications, dosages, drug interactions, contraindications, and clinical prescribing guidelines. Answers are strictly grounded in verified prescribing documentation with inline citations.
+        </p>
+        <div class="welcome-suggestions">
+          <button class="suggestion-chip" data-suggestion="What is the recommended dosage for a 25kg child with psoriatic arthritis?">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+            </svg>
+            Pediatric dosage guidance
+          </button>
+          <button class="suggestion-chip" data-suggestion="What are the contraindications and warnings?">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+            </svg>
+            Contraindications & warnings
+          </button>
+          <button class="suggestion-chip" data-suggestion="What drug interactions should I be aware of?">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
+            </svg>
+            Drug interactions
+          </button>
+          <button class="suggestion-chip" data-suggestion="What adverse reactions are most commonly reported?">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/>
+            </svg>
+            Adverse reactions
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversation thread -->
+    <div id="conversation-thread" class="conversation-thread hidden">
+      <!-- Messages rendered by JS -->
+    </div>
+
+    <!-- Input area — always visible -->
+    <div class="input-area-wrapper">
+      <form id="chat-form" class="input-area" autocomplete="off">
+        <div class="input-container">
+          <textarea
+            id="message-input"
+            class="message-input"
+            placeholder="Ask about medications, dosages, contraindications, drug interactions, or prescribing guidelines…"
+            rows="1"
+            aria-label="Message input"
+          ></textarea>
+          <button id="btn-mic" class="mic-btn" type="button" title="Start voice input" aria-label="Start voice input">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+            </svg>
+          </button>
+          <button id="btn-send" class="send-btn" type="submit" disabled title="Send message" aria-label="Send message">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>
+            </svg>
+          </button>
+        </div>
+        <p class="input-disclaimer">DrugBot is strictly focused on medical and pharmaceutical information. Always consult a healthcare professional for clinical decisions.</p>
+      </form>
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════════ UPLOAD MODAL ═══════════════════════════════════════════ -->
+  <div id="upload-modal" class="modal-scrim hidden" role="dialog" aria-modal="true" aria-label="Upload drug prescribing information PDF">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 class="modal-title">Upload Prescribing Information</h2>
+        <button id="btn-close-modal" class="icon-btn" title="Close" aria-label="Close dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+          </svg>
+        </button>
+      </div>
+      <p class="modal-subtitle">Upload official FDA prescribing labels, package inserts, or clinical monographs (PDF). Non-medical documents will be rejected.</p>
+      <form id="upload-form" class="upload-form">
+        <label class="form-label" for="drug-name-input">Drug Name</label>
+        <input
+          id="drug-name-input"
+          class="form-input"
+          type="text"
+          placeholder="e.g. RINVOQ, HUMIRA, SKYRIZI"
+          required
+          autocomplete="off"
+        />
+
+        <label class="form-label" for="pdf-file-input">PDF Document</label>
+        <div id="drop-zone" class="drop-zone">
+          <input id="pdf-file-input" type="file" accept=".pdf" required hidden />
+          
+          <!-- Default drop prompt state -->
+          <div id="drop-zone-prompt" class="drop-zone-content">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p class="drop-zone-text">Drop official prescribing PDF here or <span class="drop-zone-link">browse</span></p>
+            <span class="drop-zone-hint">PDF format up to 50MB</span>
+          </div>
+
+          <!-- Selected file preview state with Remove button -->
+          <div id="selected-file-container" class="selected-file-container hidden">
+            <div class="selected-file-details">
+              <svg class="file-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/>
+              </svg>
+              <div class="selected-file-meta">
+                <span id="selected-file-name" class="selected-file-name"></span>
+                <span id="selected-file-size" class="selected-file-size"></span>
+              </div>
+            </div>
+            <button id="btn-remove-pdf" class="btn-remove-pdf" type="button" title="Remove selected PDF" aria-label="Remove selected PDF">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+              </svg>
+              <span>Remove</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="upload-progress" class="upload-progress hidden">
+          <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+          <p id="upload-status" class="upload-status-text"></p>
+        </div>
+
+        <button id="btn-submit-upload" class="pill-btn" type="submit" disabled>Upload & Ingest</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
